@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %h1
+      = @ticket.name
+      , thanks for submitting your request!
+    %p
+      We will resolve it as soon as possible.
+      %br/
+    %p
+      To check your ticket or update it, just follow this link: #{@ticket_url}
+    %p Thanks and have a nice day!

@@ -1,0 +1,18 @@
+%p#notice= notice
+%p
+  %b Name:
+  = @ticket.name
+%p
+  %b Email:
+  = @ticket.email
+%p
+  %b Issue type:
+  = @ticket.issue
+%p
+  %b Subject:
+  = @ticket.subject
+%p
+  %b Description:
+  = @ticket.description
+
+#{link_to 'Back', root_path}
