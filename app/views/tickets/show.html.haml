@@ -15,4 +15,36 @@
   %b Description:
   = @ticket.description
 
+%h2 Replies:
+-if !@ticket.comments.empty?
+  - @ticket.comments.each do |comment|
+    %p
+      %b Reply:
+      %br/
+      -if comment.admin_id
+        = comment.body
+        %br/
+        posted by staff member
+        %i #{Admin.where(id: comment.admin_id).first.email}
+      -else
+        = comment.body
+        %br/
+        posted by ticket reporter
+        %i #{@ticket.name}
+-else
+  %b
+    %i No replies yet ;(      
+
+%h2 Add your reply:
+= form_for([@ticket, @ticket.comments.build]) do |f|
+  %p
+    - if current_admin
+      - id = current_admin.id
+      = f.hidden_field :admin_id, {:value => id}
+  .field
+    %br/
+    = f.text_area :body
+  .actions
+    = f.submit
+
 #{link_to 'Back', root_path}

@@ -1,0 +1,17 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %h1
+      = @ticket.name
+      , there is new answer in your ticket!
+    %p
+      %code Staff reply:
+    %p
+      %kbd 
+        = @comment.body
+      %br/
+    %p
+      To check your ticket or update it, just follow this link: #{@ticket_url}
+    %p Thanks and have a nice day!

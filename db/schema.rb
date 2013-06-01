@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130601152532) do
+ActiveRecord::Schema.define(:version => 20130601205657) do
 
   create_table "admins", :force => true do |t|
     t.string   "email",                  :default => "", :null => false
@@ -26,11 +26,20 @@ ActiveRecord::Schema.define(:version => 20130601152532) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
-    t.string   "username"
   end
 
   add_index "admins", ["email"], :name => "index_admins_on_email", :unique => true
   add_index "admins", ["reset_password_token"], :name => "index_admins_on_reset_password_token", :unique => true
+
+  create_table "comments", :force => true do |t|
+    t.text     "body"
+    t.integer  "ticket_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "admin_id"
+  end
+
+  add_index "comments", ["ticket_id"], :name => "index_comments_on_ticket_id"
 
   create_table "tickets", :force => true do |t|
     t.string   "name"
@@ -42,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20130601152532) do
     t.string   "unique_reference"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.integer  "admin_id"
   end
 
   add_index "tickets", ["unique_reference"], :name => "index_tickets_on_unique_reference", :unique => true

@@ -1,4 +1,27 @@
 class TicketsController < ApplicationController
+  before_filter :authenticate_admin!,     only: [:index, :edit, :update]
+
+  def index
+    @tickets = Ticket.search(params[:search])
+  end
+
+  def edit
+    @ticket = Ticket.find(params[:id])
+  end
+
+  def update
+    @ticket = Ticket.find(params[:id])
+
+    respond_to do |format|
+      if @ticket.update_attributes(params[:ticket])
+        format.html { redirect_to @ticket, notice: 'Ticket was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @ticket.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   def show
     @ticket = Ticket.find(params[:id])
@@ -33,6 +56,11 @@ class TicketsController < ApplicationController
         format.json { render json: @ticket.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def filter
+    @tickets = Ticket.where("status = ?", params[:condition])
+    render 'index'
   end
 
   private
