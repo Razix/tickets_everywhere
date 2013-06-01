@@ -1,4 +1,8 @@
 TicketsEverywhere::Application.routes.draw do
+  devise_for :admins do
+    get '/admins/sign_out' => 'devise/sessions#destroy'
+  end
+
   resources :tickets
 
   root :to => 'tickets#new'
