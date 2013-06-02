@@ -1,17 +1,21 @@
+- provide(:title, 'Tickets list')
 %h1 All existing tickets
-%table
-  - @tickets.each do |ticket|
-    %tr
-      %td
-        = link_to ticket.name, ticket
-        |
-      %td
-        = link_to 'Edit', edit_ticket_path(ticket)
-        |
-      %td= link_to 'Destroy', ticket, method: :delete, data: { confirm: 'Are you sure?' }
-%br/
-= link_to 'New ticket', new_ticket_path
-= link_to "New unassigned tickets", action: :filter, condition: "Waiting for Staff Response"
-= link_to "Open Tickets", action: :filter, condition: "Waiting for Customer"
-= link_to "On hold tickets", action: :filter, condition: "On Hold Ticket"
-= link_to "Closed Tickets", action: :filter, condition: "Closed Ticket"
+
+= will_paginate
+
+.row
+  .span6.offset3
+    %table
+      %tr
+        %td.headers.subject
+          %i Subject
+        %td.headers
+          %i Action
+      - @tickets.each do |ticket|
+        %tr
+          %td.ticket_subject
+            = link_to ticket.subject, ticket
+          %td
+            = link_to 'Edit', edit_ticket_path(ticket)
+
+= will_paginate

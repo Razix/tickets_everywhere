@@ -4,6 +4,10 @@ gem 'rails', '3.2.13'
 gem 'haml-rails'
 gem 'friendly_id'
 gem 'devise'
+gem 'bootstrap-sass', '2.1'
+gem 'faker', '1.1.2'
+gem 'will_paginate', '3.0.4'
+gem 'bootstrap-will_paginate', '0.0.9'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -11,6 +15,10 @@ gem 'devise'
 group :development, :test do
   gem 'sqlite3'
   gem 'rspec-rails'
+end
+
+group :production do
+  gem 'pg'
 end
 
 # Gems used only for assets and not required

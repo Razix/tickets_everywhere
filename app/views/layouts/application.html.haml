@@ -1,21 +1,18 @@
 !!!
 %html
   %head
-    %title TicketsEverywhere
+    %title= yield(:title)
     = stylesheet_link_tag    "application", :media => "all"
     = javascript_include_tag "application"
     = csrf_meta_tags
+    = render 'layouts/shim'
   %body
-    %form{action: tickets_path, method: "get"}
-      = label_tag(:search, "Search for:")
-      = text_field_tag(:search, params[:search])
-      = submit_tag("Search", name: nil)
-    #user_nav
-      - if admin_signed_in?
-        Signed in as #{current_admin.email}. Not you?
-        \#{link_to "Sign out", destroy_admin_session_path, :method => :delete}
-      - else
-        = link_to "Sign up", new_admin_registration_path
-        or #{link_to "sign in", new_admin_session_path}
-    = yield
-   
+    = render 'layouts/header'
+    .container
+      - flash.each do |key, value|
+        = content_tag(:div, value, class: "alert alert-#{key}")
+      = yield
+      = render 'layouts/footer'
+      %br/
+      %br/
+      = debug(params) if Rails.env.development?

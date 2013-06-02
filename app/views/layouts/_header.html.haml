@@ -1,0 +1,27 @@
+%header.navbar.navbar-fixed-top.navbar-inverse
+  .navbar-inner
+    .container
+      = link_to "New ticket", root_path, id: "logo"
+      %nav
+        %ul.nav.pull-right
+          - if admin_signed_in?
+            %li= link_to "Tickets", tickets_path
+            %li#fat-menu.dropdown
+              %a.dropdown-toggle{href: '#', "data-toggle" => "dropdown"}
+                Admin panel 
+                %b.caret
+              %ul.dropdown-menu
+                %li= link_to "New unassigned tickets", action: :filter, |
+                              condition: "Waiting for Staff Response"
+                %li= link_to "Open Tickets", action: :filter, condition: "Waiting for Customer"
+                %li= link_to "On hold tickets", action: :filter, condition: "On Hold Ticket"
+                %li= link_to "Closed Tickets", action: :filter, condition: "Closed Ticket"
+                %br/
+                %form{action: tickets_path, method: "get"}
+                  = text_field_tag(:search, params[:search])
+                  = submit_tag("Search", name: nil, class: "btn btn-large btn-primary search_btn")
+                %li.divider
+                %li= link_to "Sign out", destroy_admin_session_path, method: :delete
+          - else
+            %li= link_to "Sign up", new_admin_registration_path
+            %li= link_to "Sign in", new_admin_session_path

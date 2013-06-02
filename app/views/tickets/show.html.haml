@@ -1,50 +1,56 @@
-%p#notice= notice
-%p
-  %b Name:
-  = @ticket.name
-%p
-  %b Email:
-  = @ticket.email
-%p
-  %b Issue type:
-  = @ticket.issue
-%p
-  %b Subject:
-  = @ticket.subject
-%p
-  %b Description:
-  = @ticket.description
+- provide(:title, 'Check ticket')
+%h1 Ticket #{@ticket.unique_reference}
 
-%h2 Replies:
--if !@ticket.comments.empty?
-  - @ticket.comments.each do |comment|
+.row
+  .span6.offset3
+    %p#notice= notice
     %p
-      %b Reply:
-      %br/
-      -if comment.admin_id
-        = comment.body
-        %br/
-        posted by staff member
-        %i #{Admin.where(id: comment.admin_id).first.email}
-      -else
-        = comment.body
-        %br/
-        posted by ticket reporter
-        %i #{@ticket.name}
--else
-  %b
-    %i No replies yet ;(      
-
-%h2 Add your reply:
-= form_for([@ticket, @ticket.comments.build]) do |f|
-  %p
-    - if current_admin
-      - id = current_admin.id
-      = f.hidden_field :admin_id, {:value => id}
-  .field
+      %b Reporter name:
+      = @ticket.name
+    %p
+      %b Reporter email:
+      = @ticket.email
+    %p
+      %b Issue type:
+      = @ticket.issue
+    %p
+      %b Subject:
+      = @ticket.subject
+    %p
+      %b Description:
+      = wrap(@ticket.description)
     %br/
-    = f.text_area :body
-  .actions
-    = f.submit
 
-#{link_to 'Back', root_path}
+    %h2 Replies:
+    -if !@ticket.comments.empty?
+      - @ticket.comments.each do |comment|
+        %p
+          -if comment.admin_id
+            %hr/
+            %span.content= wrap(comment.body)
+            %span.timestamp Posted #{time_ago_in_words(comment.created_at)} ago
+            %br/
+            by staff member
+            %b
+              %i #{Admin.where(id: comment.admin_id).first.email}
+          -else
+            %hr/
+            %span.content= wrap(comment.body)
+            %span.timestamp Posted #{time_ago_in_words(comment.created_at)} ago
+            %br/
+            by ticket reporter
+            %b
+              %i #{@ticket.name}
+    -else
+      %b
+        %i No replies yet ;(  
+    %br/    
+
+    %h2 Add your reply:
+    = form_for([@ticket, @ticket.comments.build]) do |f|
+      %p
+        - if current_admin
+          - id = current_admin.id
+          = f.hidden_field :admin_id, {value: id}
+        = f.text_area :body
+      = f.submit "Post comment", class: "btn btn-large btn-primary"

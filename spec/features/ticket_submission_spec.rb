@@ -14,7 +14,7 @@ describe "Ticket pages" do
 
     before { visit root_path }
 
-    let(:submit) { "Create Ticket" }
+    let(:submit) { "Submit request" }
 
     describe "with invalid information" do
       it "should not create a ticket" do

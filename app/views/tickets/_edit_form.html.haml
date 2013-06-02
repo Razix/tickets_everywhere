@@ -1,0 +1,19 @@
+= render 'shared/error_messages', object: f.object
+%br/
+= f.label :name
+= f.text_field :name
+
+= f.label :email
+= f.text_field :email
+
+= f.label :issue
+= f.select :issue, [['General','general'],['Account','account'],['Billing','billing'],['Technical','technical']]
+
+= f.label :status
+= f.select :status, [['Waiting for Staff Response','New unassigned ticket'], ['Waiting for Customer','Open Ticket'], ['On Hold','On Hold Ticket'], ['Cancelled','Closed Ticket'], ['Completed','Closed Ticket']]
+
+= f.label :subject
+= f.text_field :subject
+
+= f.label :description
+= f.text_area :description

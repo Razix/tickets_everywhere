@@ -1,8 +1,8 @@
 class TicketsController < ApplicationController
-  before_filter :authenticate_admin!,     only: [:index, :edit, :update]
+  before_filter :require_login,     only: [:index, :edit, :update]
 
   def index
-    @tickets = Ticket.search(params[:search])
+    @tickets = Ticket.paginate(page: params[:page]).search(params[:search])
   end
 
   def edit
@@ -11,16 +11,17 @@ class TicketsController < ApplicationController
 
   def update
     @ticket = Ticket.find(params[:id])
-
-    respond_to do |format|
-      if @ticket.update_attributes(params[:ticket])
-        format.html { redirect_to @ticket, notice: 'Ticket was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @ticket.errors, status: :unprocessable_entity }
+      if current_admin
+        @id = current_admin.id
       end
-    end
+
+      params[:ticket][:admin_id] = @id
+      if @ticket.update_attributes(params[:ticket])
+        flash[:success] = 'Ticket was successfully updated.'
+        redirect_to @ticket
+      else
+        render 'edit'
+      end
   end
 
   def show
@@ -45,21 +46,18 @@ class TicketsController < ApplicationController
     params[:ticket][:unique_reference] = @unique_reference
 
     @ticket = Ticket.new(params[:ticket])
-    respond_to do |format|
       if @ticket.save
         # Send confirmation email
         TicketConfirmationMailer.ticket_submittion(@ticket).deliver
-        format.html { redirect_to @ticket, notice: 'Ticket was successfully created.' }
-        format.json { render json: @ticket, status: :created, location: @ticket }
+        redirect_to @ticket
+        flash[:success] = "Ticket was successfully created!"
       else
-        format.html { render action: "new" }
-        format.json { render json: @ticket.errors, status: :unprocessable_entity }
+        render 'new'
       end
-    end
   end
 
   def filter
-    @tickets = Ticket.where("status = ?", params[:condition])
+    @tickets = Ticket.paginate(page: params[:page]).where("status = ?", params[:condition])
     render 'index'
   end
 
@@ -71,6 +69,12 @@ class TicketsController < ApplicationController
       "#{reference[/\A[a-z]+/i].next}#{seperator}#{?0 * (limit - 1)}1"
     else
       reference.next
+    end
+  end
+
+  def require_login
+    unless current_admin
+      redirect_to root_path
     end
   end
 end
