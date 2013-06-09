@@ -48,7 +48,7 @@ class TicketsController < ApplicationController
     @ticket = Ticket.new(params[:ticket])
       if @ticket.save
         # Send confirmation email
-        TicketConfirmationMailer.ticket_submittion(@ticket).deliver
+        # TicketConfirmationMailer.ticket_submittion(@ticket).deliver
         redirect_to @ticket
         flash[:success] = "Ticket was successfully created!"
       else
