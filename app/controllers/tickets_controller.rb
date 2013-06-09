@@ -35,20 +35,20 @@ class TicketsController < ApplicationController
   def create
     # Check if there are records in Database and depending on results
     # create unique reference for a ticket
-    @ticket_check = Ticket.first
+    # @ticket_check = Ticket.first
 
-    if @ticket_check.blank?
-      @unique_reference = 'AAA-000001'
-    else
-      @unique_reference = next_reference(Ticket.last.unique_reference)
-    end
+    # if @ticket_check.blank?
+    #   @unique_reference = 'AAA-000001'
+    # else
+    #   @unique_reference = next_reference(Ticket.last.unique_reference)
+    # end
 
-    params[:ticket][:unique_reference] = @unique_reference
+    params[:ticket][:unique_reference] = rand(999999)
 
     @ticket = Ticket.new(params[:ticket])
       if @ticket.save
         # Send confirmation email
-        # TicketConfirmationMailer.ticket_submittion(@ticket).deliver
+        TicketConfirmationMailer.ticket_submittion(@ticket).deliver
         redirect_to @ticket
         flash[:success] = "Ticket was successfully created!"
       else
